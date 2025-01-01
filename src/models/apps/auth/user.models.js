@@ -17,8 +17,8 @@ const UserSchema = new mongoose.Schema(
       required: false
     },
     password: {
-      type: Boolean,
-      select: false
+      type: String,
+      required: false
     },
    
   },
@@ -55,6 +55,10 @@ UserSchema.pre('save', function (next) {
   }
   return genSalt(that, SALT_FACTOR, next)
 })
+
+UserSchema.methods.isPasswordCorrect = async function (password) {
+  return bcrypt.compare(password, this.password); // Compare the entered password with the hashed one
+};
 
 UserSchema.methods.comparePassword = function (passwordAttempt, cb) {
   bcrypt.compare(passwordAttempt, this.password, (err, isMatch) =>

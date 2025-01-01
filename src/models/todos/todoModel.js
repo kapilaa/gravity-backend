@@ -68,4 +68,52 @@ const TodoUpdates =async (id,data) => {
     }
 }
 
-export {TodosCreate,TodosGetRecords,TodoRemoved,TodoUpdates}
+const todoSearching =async (keyword) => {
+  try{
+    const newUser =await Todo.find({title:{'$regex': `${keyword}`}})
+    if(newUser.length>0){
+      return {type:"success",data:newUser};
+    }else{
+      return {type:"error",data:newUser};
+    }
+     
+    }catch(error){
+      return {type:"error",error:error};
+      
+    }
+}
+
+const todoFilterStatusModel=async (keyword) => {
+  try{
+    console.log(keyword)
+    const newUser =await Todo.find({isCompleted:keyword}).sort({ createdAt: -1 });
+    if(newUser.length>0){
+      return {type:"success",data:newUser};
+    }else{
+      return {type:"error",data:newUser};
+    }
+     
+    }catch(error){
+      return {type:"error",error:error};
+      
+    }
+}
+
+const todoChangeStatusModel=async (id,changeBy) => {
+  try{
+    const newUser =await Todo.findByIdAndUpdate(id,{isCompleted :changeBy},{ new: true })
+    if(newUser){
+      return {type:"success",data:newUser};
+    }else{
+      return {type:"error",data:newUser};
+    }
+     
+    }catch(error){
+      return {type:"error",error:error};
+      
+    }
+}
+
+
+
+export {TodosCreate,TodosGetRecords,TodoRemoved,TodoUpdates,todoSearching,todoFilterStatusModel,todoChangeStatusModel}

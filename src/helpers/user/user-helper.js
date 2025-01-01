@@ -2,17 +2,13 @@ import { User } from "../../models/apps/auth/user.models.js";
 
 const registerModel =async (req,res) => {
   try{
-    const { firstName,lastName, email, username, password, role } = req.body;
+    const { name, email, password } = req.body;
       const user = await User.create({
-            firstName,
-            lastName,
+            name,
             email,
-            password,
-            username,
-            isEmailVerified: false,
-            role
+            password
       });
-      return {type:"success",data:{firstName:user.firstName,lastName:user.lastName,email:user.email,isActive:user.isActive}};
+      return {type:"success",data:{name:user.name,email:user.email}};
     }catch(error){
       return {type:"error",error:error};
       
@@ -33,9 +29,9 @@ const loginModel =async (req,fieldString) => {
   }
 }
 
-const getUserbyId =async (req,fieldString) => {
+const getUserbyId =async (userId,fieldString) => {
   try{
-    const userData = await  User.findById(req.userId).select(fieldString)
+    const userData = await  User.findById(userId).select(fieldString)
     return userData;
   }catch(error){
     return error;

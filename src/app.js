@@ -33,7 +33,7 @@ const httpServer = createServer(app);
 //--------------------------------------------------------------------------/
 
 app.get('/',home);
-// app.use("/api/v1", authUser);
+app.use("/api/v1/auth", authUser);
 app.use("/api/v1", objectRoute);
 app.use((req, res, next) => {
   res.status(404).json({
@@ -42,13 +42,6 @@ app.use((req, res, next) => {
   });
 });
 
-// app.use((err, req, res, next) => {
-//   console.error(err.stack);  // Log the error stack
-//   res.status(500).json({
-//     error: 'This is internal server issue.Please wait it will not be resolved',
-//     message: err.message || 'Something went wrong!',
-//   });
-// });
 //--------------------------------------------------------------------------/
 
 //------------------------------Error Handling------------------------------/

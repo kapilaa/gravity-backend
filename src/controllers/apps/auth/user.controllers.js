@@ -4,7 +4,8 @@ import { ApiResponse } from "../../../utils/ApiResponse.js";
 import { getUserbyId, loginModel, registerModel } from "../../../helpers/index.js";
 import { User } from "../../../models/apps/auth/user.models.js";
 import { ApiError } from "../../../utils/ApiError.js";
-
+import jwt from 'jsonwebtoken';
+import Blacklist from "../../../models/blacklist/index.js";
 const userRegister = asyncHandler(async (req, res) => {
 
   const existedUser = await loginModel(req,'password')
@@ -14,6 +15,7 @@ const userRegister = asyncHandler(async (req, res) => {
   }
 
   const response=await registerModel(req,res);
+  console.log(11)
   if(response.type=='success'){
         return res.status(201).json(new ApiResponse(true,200,
             response.data ,
@@ -34,42 +36,25 @@ const userRegister = asyncHandler(async (req, res) => {
 })
 const userLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await loginModel(req,'password')
-  
-    if (!user) {
-        return res.status(201)
-          .json(
-            new ApiResponse(
-              201,
-              false,
-              {},
-              "Email/UserName does not exist"
-            )
-          );
-     
+    const { password } = req.body;
+    const userEmail = await loginModel(req,'password')
+    
+    if (!userEmail) {
+      return res.status(200).json({success:false,statusCode:200, message: 'Email not found' });
     }
-    const isPasswordValid = await user.isPasswordCorrect(password);
+    const isPasswordValid = await userEmail.isPasswordCorrect(password);
     if (!isPasswordValid) {
-      return res.status(201).json(new ApiResponse(true,201,
-        {} ,
-        "Incorrect password"
-      )
-    );
+      return res.status(200).json({success:false, message: 'Invalid password' });
     }
-    const userData = await loginModel(req,'_id firstName lastName isActive role')
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
-      userData._id
-    );
-
-    return res.status(201).json(new ApiResponse(true,200,
-      {userData,accessToken,refreshToken} ,
-      "Users registered successfully"
-    )
-  );
+    
+    const userData=await getUserbyId(userEmail._id,'_id name email')
+    const token = jwt.sign({ userId: userData._id,name:userData.name,email:userData.email }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: '1h',
+    });
+    res.status(200).json({success:true, message: 'You are logged In successful.',auth_token: token,user_data:userData });
     
   } catch (error) {
-    handleError(res, error)
+    handleError(res, error) 
   }
 }
 
@@ -90,9 +75,21 @@ const myProfileInfo = async (req, res) => {
 
 const userLogout = async (req, res) => {
   try {
-    const token=req.auth_token
-
-  res.status(200).json({ message: 'Logout successful' });
+    // const token=req.auth_token
+    const token = req.header('Authorization')?.split(' ')[1];
+    if (!token) {
+      return res.status(400).json({success:false, message: 'No token provided'+token });
+      
+    }
+    const blacklistedToken =new Blacklist({token})
+    blacklistedToken
+    .save()
+    .then(() => {
+      res.json({success:true, message: 'Logged out successfully' });
+    })
+    .catch((err) => {
+      res.status(500).json({success:false, message: 'Server error' });
+    })
 
   } catch (err) {
     return new ApiError(
