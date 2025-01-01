@@ -10,12 +10,12 @@ const userRegister = asyncHandler(async (req, res) => {
 
   const existedUser = await loginModel(req,'password')
 
-  if (existedUser) {
-    throw new ApiError(409, "email or username already exists", []);
-  }
+   if (existedUser) {
+      return res.status(201).json({success:false,message:"Email already exists.Try with different email."
+      })
+    }
 
   const response=await registerModel(req,res);
-  console.log(11)
   if(response.type=='success'){
         return res.status(201).json(new ApiResponse(true,200,
             response.data ,
