@@ -28,7 +28,3 @@ ACCESS_TOKEN_SECRET=**********
 TO run this project please run following command
 
 npm start
-
-To create build of this project please run following command
-
-npm run build
