@@ -20,9 +20,13 @@ Create env file and add following variables
 # ################# REQUIRED ENV VARS START #################
 PORT=8080
 MONGODB_URI=mongodb://localhost:27017 # `mongodb://localhost:27017` in case using local mongodb
+
 NODE_ENV=development # changing this will avoid stack traces in the error response
+
 EXPRESS_SESSION_SECRET==**********
+
 DB_NAME=gravity_task or "create any"
+
 ACCESS_TOKEN_SECRET=**********
 
 TO run this project please run following command
