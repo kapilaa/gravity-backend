@@ -40,7 +40,7 @@ const userLogin = async (req, res) => {
     const userEmail = await loginModel(req,'password')
     
     if (!userEmail) {
-      return res.status(200).json({success:false,statusCode:200, message: 'Email not found' });
+      return res.status(200).json({success:false,statusCode:200, message: 'This Email not found' });
     }
     const isPasswordValid = await userEmail.isPasswordCorrect(password);
     if (!isPasswordValid) {

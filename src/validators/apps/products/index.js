@@ -1,11 +1,27 @@
 import { body, param } from "express-validator";
 
-      const todosValidator = () => {
+      const productValidator = () => {
                 return [
                   body("title")
                     .trim()
                     .notEmpty()
                     .withMessage("Title must be required"),
+                    body("image")
+                    .trim()
+                    .notEmpty()
+                    .withMessage("Image must be required"),
+                    body("price")
+                    .trim()
+                    .notEmpty()
+                    .withMessage("Price must be required"),
+                    body("category")
+                    .trim()
+                    .notEmpty()
+                    .withMessage("Category must be required"),
+                    body("description")
+                    .trim()
+                    .notEmpty()
+                    .withMessage("Description must be required"),
 
                 ];
       };
@@ -40,7 +56,7 @@ const statusChangeValidator = () => {
 };
 
 export {
-  todosValidator,
+  productValidator,
   searchValidator,
   statusValidator,
   statusChangeValidator

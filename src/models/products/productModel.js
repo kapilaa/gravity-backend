@@ -1,12 +1,13 @@
-import { Todo } from "./todosSchema.js";
-
-const TodosCreate =async (req) => {
+import { Product } from "./productSchema.js";
+const ProductsCreate =async (req) => {
   try{
-    const { title,description } = req.body;
-   
-    const newUser =await  Todo.create({
-      title:title,
-      description:description
+    const { title,price,image,category,description } = req.body;
+    const newUser =await  Product.create({
+      title: title,
+      price:price,
+      image:image,
+      category:category,
+      description: description,
     })
     if(newUser){
       return {type:"success",data:newUser};
@@ -20,10 +21,10 @@ const TodosCreate =async (req) => {
     }
 }
 
-const TodosGetRecords =async () => {
+const ProductsGetRecords =async () => {
   try{
    
-    const newUser =await Todo.find().sort({ createdAt: -1 });
+    const newUser =await Product.find().sort({ createdAt: -1 });
     if(newUser){
       return {type:"success",data:newUser};
     }else{
@@ -36,10 +37,10 @@ const TodosGetRecords =async () => {
     }
 }
 
-const TodoRemoved =async (id) => {
+const ProductRemoved =async (id) => {
   try{
    
-    const newUser =await Todo.findByIdAndDelete(id)
+    const newUser =await Product.findByIdAndDelete(id)
     if(newUser){
       return {type:"success",data:newUser};
     }else{
@@ -52,10 +53,9 @@ const TodoRemoved =async (id) => {
     }
 }
 
-const TodoUpdates =async (id,data) => {
+const ProductUpdates =async (id,data) => {
   try{
-   
-    const newUser =await Todo.findByIdAndUpdate(id,data,{ new: true })
+    const newUser =await Product.findByIdAndUpdate(id,data,{ new: true })
     if(newUser){
       return {type:"success",data:newUser};
     }else{
@@ -68,9 +68,9 @@ const TodoUpdates =async (id,data) => {
     }
 }
 
-const todoSearching =async (keyword) => {
+const ProductSearching =async (keyword) => {
   try{
-    const newUser =await Todo.find({title:{'$regex': `${keyword}`}})
+    const newUser =await Product.find({title:{'$regex': `${keyword}`}})
     if(newUser.length>0){
       return {type:"success",data:newUser};
     }else{
@@ -83,10 +83,10 @@ const todoSearching =async (keyword) => {
     }
 }
 
-const todoFilterStatusModel=async (keyword) => {
+const ProductFilterStatusModel=async (keyword) => {
   try{
     console.log(keyword)
-    const newUser =await Todo.find({isCompleted:keyword}).sort({ createdAt: -1 });
+    const newUser =await Product.find({isCompleted:keyword}).sort({ createdAt: -1 });
     if(newUser.length>0){
       return {type:"success",data:newUser};
     }else{
@@ -99,9 +99,9 @@ const todoFilterStatusModel=async (keyword) => {
     }
 }
 
-const todoChangeStatusModel=async (id,changeBy) => {
+const ProductChangeStatusModel=async (id,changeBy) => {
   try{
-    const newUser =await Todo.findByIdAndUpdate(id,{isCompleted :changeBy},{ new: true })
+    const newUser =await Product.findByIdAndUpdate(id,{isCompleted :changeBy},{ new: true })
     if(newUser){
       return {type:"success",data:newUser};
     }else{
@@ -116,4 +116,4 @@ const todoChangeStatusModel=async (id,changeBy) => {
 
 
 
-export {TodosCreate,TodosGetRecords,TodoRemoved,TodoUpdates,todoSearching,todoFilterStatusModel,todoChangeStatusModel}
+export {ProductsCreate,ProductsGetRecords,ProductRemoved,ProductUpdates,ProductSearching,ProductFilterStatusModel,ProductChangeStatusModel}

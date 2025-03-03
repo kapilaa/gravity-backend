@@ -1,8 +1,20 @@
 import mongoose, { Schema } from "mongoose";
 
-const TotosSchema = new Schema(
+const ProductSchema = new Schema(
   {
     title: {
+      type: String,
+      required:true
+    },
+    price: {
+      type: String,
+      required:true
+    },
+    category: {
+      type: String,
+      required:true
+    },
+    image: {
       type: String,
       required:true
     },
@@ -24,4 +36,4 @@ const TotosSchema = new Schema(
   }
 );
 
-export const Todo = mongoose.model("Todo", TotosSchema);
+export const Product = mongoose.model("Product", ProductSchema);
